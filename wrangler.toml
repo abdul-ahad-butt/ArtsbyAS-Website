@@ -6,7 +6,7 @@ pages_build_output_dir = "dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "artbyas-db"
-database_id = "00000000-0000-0000-0000-000000000000" # Placeholder, update in Phase 7
+database_id = "8456ac9b-36ca-4427-bee6-e0ebfed07dfe"
 
 # Placeholder R2 Bucket binding
 [[r2_buckets]]
