@@ -1,0 +1,125 @@
+import { useState, useEffect } from 'react'
+import type { Canvas } from './lib/types'
+import { fetchCanvases } from './lib/api'
+import Hero from './components/storefront/Hero'
+import ArtworkGrid from './components/storefront/ArtworkGrid'
+import ProductModal from './components/storefront/ProductModal'
+import CheckoutForm from './components/storefront/CheckoutForm'
+import SuccessScreen from './components/storefront/SuccessScreen'
+import AdminLayout from './components/admin/AdminLayout'
+import { Loader2 } from 'lucide-react'
+
+function Storefront() {
+  const [canvases, setCanvases] = useState<Canvas[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  const [selectedCanvas, setSelectedCanvas] = useState<Canvas | null>(null)
+  const [purchasingCanvas, setPurchasingCanvas] = useState<Canvas | null>(null)
+  const [orderCode, setOrderCode] = useState<string | null>(null)
+
+  useEffect(() => {
+    loadCanvases()
+  }, [])
+
+  const loadCanvases = async () => {
+    try {
+      const data = await fetchCanvases()
+      // Filter out hidden canvases for the public storefront
+      setCanvases(data.filter((c: Canvas) => c.status !== 'hidden'))
+    } catch (err) {
+      console.error(err)
+      setError('Unable to load gallery. Please try again later.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleExplore = () => {
+    document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const handlePurchase = (canvas: Canvas) => {
+    setSelectedCanvas(null)
+    setPurchasingCanvas(canvas)
+  }
+
+  const handleCheckoutSuccess = (code: string) => {
+    setPurchasingCanvas(null)
+    setOrderCode(code)
+    loadCanvases()
+  }
+
+  const handleSuccessClose = () => {
+    setOrderCode(null)
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <header className="border-b border-brand-border py-6 px-8 flex justify-between items-center bg-brand-surface/80 backdrop-blur-sm sticky top-0 z-50">
+        <h1 className="text-2xl font-bold tracking-tight font-serif">ArtbyAS</h1>
+        <nav className="text-sm font-medium text-brand-charcoal space-x-6">
+          <button onClick={handleExplore} className="hover:text-brand-espresso transition-colors">Gallery</button>
+          <a href="#" className="hover:text-brand-espresso transition-colors">About</a>
+        </nav>
+      </header>
+
+      <main className="flex-1 flex flex-col">
+        <Hero onExplore={handleExplore} />
+        
+        <div id="gallery" className="w-full bg-brand-background border-t border-brand-border">
+          <div className="max-w-7xl mx-auto px-4 py-16 text-center">
+            <h2 className="text-4xl font-serif font-bold text-brand-espresso mb-4">The Collection</h2>
+            <p className="text-brand-charcoal/70 mb-12">Hand-painted originals available for purchase.</p>
+            
+            {loading ? (
+              <div className="flex justify-center items-center py-20">
+                <Loader2 className="w-8 h-8 animate-spin text-brand-accent" />
+              </div>
+            ) : error ? (
+              <div className="py-20 text-red-500 font-medium">{error}</div>
+            ) : (
+              <ArtworkGrid 
+                canvases={canvases} 
+                onSelect={(canvas) => setSelectedCanvas(canvas)} 
+              />
+            )}
+          </div>
+        </div>
+      </main>
+      
+      <footer className="py-12 text-center text-sm text-brand-charcoal/70 border-t border-brand-border bg-brand-surface">
+        &copy; {new Date().getFullYear()} ArtbyAS. All rights reserved.
+      </footer>
+
+      <ProductModal 
+        canvas={selectedCanvas} 
+        onClose={() => setSelectedCanvas(null)} 
+        onPurchase={handlePurchase}
+      />
+      
+      <CheckoutForm 
+        canvas={purchasingCanvas} 
+        onClose={() => setPurchasingCanvas(null)} 
+        onSuccess={handleCheckoutSuccess}
+      />
+      
+      <SuccessScreen 
+        orderCode={orderCode} 
+        onClose={handleSuccessClose} 
+      />
+    </div>
+  )
+}
+
+function App() {
+  const path = window.location.pathname
+  
+  if (path.startsWith('/admin')) {
+    return <AdminLayout />
+  }
+
+  return <Storefront />
+}
+
+export default App
