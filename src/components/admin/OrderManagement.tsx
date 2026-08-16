@@ -19,7 +19,7 @@ export default function OrderManagement() {
     setLoading(true)
     try {
       const data = await fetchAdminOrders(statusFilter, page)
-      setOrders(data.orders || [])
+      setOrders((data as any).orders || [])
     } catch (e) {
       console.error(e)
     } finally {

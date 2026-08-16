@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { setSignedCookie, deleteCookie } from 'hono/cookie'
-import { Bindings, Variables } from '../types'
+import type { Bindings, Variables } from '../types'
 import { authMiddleware } from '../middleware'
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>()

@@ -5,7 +5,7 @@ import adminOrders from '../functions/api/admin/orders'
 import adminCanvases from '../functions/api/admin/canvases'
 import adminAuth from '../functions/api/admin/auth'
 import { authMiddleware } from '../functions/api/middleware'
-import { Bindings, Variables } from '../functions/api/types'
+import type { Bindings, Variables } from '../functions/api/types'
 
 // Main app
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>()

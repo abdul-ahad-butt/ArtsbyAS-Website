@@ -1,6 +1,6 @@
 import { getSignedCookie } from 'hono/cookie'
 import { createMiddleware } from 'hono/factory'
-import { Bindings, Variables } from '../types'
+import type { Bindings, Variables } from './types'
 
 export const authMiddleware = createMiddleware<{ Bindings: Bindings; Variables: Variables }>(async (c, next) => {
   // If the secret is not set yet, fail gracefully instead of crashing

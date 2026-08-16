@@ -25,7 +25,7 @@ export default function Dashboard() {
         fetchCanvases()
       ])
       
-      const orders = ordersRes.orders as Order[]
+      const orders = (ordersRes as any).orders as Order[]
       
       let earnings = 0
       let pending = 0
