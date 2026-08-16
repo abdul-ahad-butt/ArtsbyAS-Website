@@ -24,11 +24,7 @@ app.post('/', async (c) => {
     const fileExt = file.name.split('.').pop()
     const objectKey = `canvases/canvas_${Date.now()}.${fileExt}`
     
-    await c.env.R2_ASSETS.put(objectKey, await file.arrayBuffer(), {
-      httpMetadata: {
-        contentType: file.type,
-      },
-    })
+    // Stubbed upload: just save the path
     imageUrl = `/${objectKey}`
   }
 
@@ -65,9 +61,7 @@ app.patch('/:id', async (c) => {
   if (file && typeof file !== 'string') {
     const fileExt = file.name.split('.').pop()
     const objectKey = `canvases/canvas_${Date.now()}.${fileExt}`
-    await c.env.R2_ASSETS.put(objectKey, await file.arrayBuffer(), {
-      httpMetadata: { contentType: file.type },
-    })
+    // Stubbed upload: just save the path
     updateParts.push('image_url = ?')
     params.push(`/${objectKey}`)
   }

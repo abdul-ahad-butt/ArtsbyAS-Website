@@ -7,6 +7,3 @@ binding = "DB"
 database_name = "artsbyas-db"
 database_id = "8456ac9b-36ca-4427-bee6-e0ebfed07dfe"
 
-[[r2_buckets]]
-binding = "R2_ASSETS"
-bucket_name = "artsbyas-assets"

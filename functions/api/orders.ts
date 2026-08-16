@@ -60,12 +60,7 @@ app.put('/:id/upload', async (c) => {
   const fileExt = file.name.split('.').pop()
   const objectKey = `screenshots/order_${id}_${Date.now()}.${fileExt}`
   
-  // Upload to R2
-  await c.env.R2_ASSETS.put(objectKey, await file.arrayBuffer(), {
-    httpMetadata: {
-      contentType: file.type,
-    },
-  })
+  // Upload to R2 removed - stubbing url
   
   // Update the order in D1
   const screenshotUrl = `/${objectKey}` // Assuming R2 public bucket or we serve it via another route
