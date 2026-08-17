@@ -1,26 +1,22 @@
-import { getSignedCookie } from 'hono/cookie'
 import { createMiddleware } from 'hono/factory'
 import type { Bindings, Variables } from './types'
+import { verifyToken } from './admin/token'
 
 export const authMiddleware = createMiddleware<{ Bindings: Bindings; Variables: Variables }>(async (c, next) => {
-  // If the secret is not set yet, fail gracefully instead of crashing
   if (!c.env.ADMIN_SESSION_SECRET) {
     return c.json({ error: 'Server configuration error' }, 500)
   }
 
-  const session = await getSignedCookie(c, c.env.ADMIN_SESSION_SECRET, 'admin_session')
-  if (!session) {
+  const auth = c.req.header('Authorization')
+  if (!auth?.startsWith('Bearer ')) {
     return c.json({ error: 'Unauthorized' }, 401)
   }
-  
-  const { results } = await c.env.DB.prepare('SELECT id, username FROM admin_users WHERE username = ?')
-    .bind(session)
-    .all<{ id: number; username: string }>()
-    
-  if (results.length === 0) {
+
+  const username = await verifyToken(auth.slice(7), c.env.ADMIN_SESSION_SECRET)
+  if (!username) {
     return c.json({ error: 'Unauthorized' }, 401)
   }
-  
-  c.set('adminUser', results[0])
+
+  c.set('adminUser', { id: 0, username })
   await next()
 })

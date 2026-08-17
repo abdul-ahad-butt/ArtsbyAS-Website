@@ -1,54 +1,44 @@
 import { Hono } from 'hono'
-import { setSignedCookie, deleteCookie } from 'hono/cookie'
 import type { Bindings, Variables } from '../types'
-import { authMiddleware } from '../middleware'
+import { createToken, verifyToken } from './token'
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>()
 
 app.post('/login', async (c) => {
-  const { username, password } = await c.req.json()
+  const body = await c.req.json().catch(() => ({}))
+  const { username, password } = body as { username?: string; password?: string }
 
   if (!username || !password) {
     return c.json({ error: 'Username and password required' }, 400)
   }
 
-  const { results } = await c.env.DB.prepare('SELECT id, password_hash FROM admin_users WHERE username = ?')
-    .bind(username)
-    .all<{ id: number; password_hash: string }>()
+  // Validate against Worker secrets set in the Cloudflare dashboard
+  if (!c.env.ADMIN_USERNAME || !c.env.ADMIN_PASSWORD) {
+    return c.json({ error: 'Server not configured' }, 500)
+  }
 
-  if (results.length === 0) {
+  if (username !== c.env.ADMIN_USERNAME || password !== c.env.ADMIN_PASSWORD) {
     return c.json({ error: 'Invalid credentials' }, 401)
   }
 
-  const user = results[0]
-  
-  // In a real application, compare hashes using a library like bcrypt or Web Crypto API
-  // For simplicity since auth is manual, assuming plain text or simple hash here.
-  // We'll use a basic comparison. 
-  if (user.password_hash !== password) {
-    return c.json({ error: 'Invalid credentials' }, 401)
-  }
-
-  await setSignedCookie(c, 'admin_session', username, c.env.ADMIN_SESSION_SECRET, {
-    path: '/',
-    secure: true,
-    httpOnly: true,
-    maxAge: 60 * 60 * 24 // 1 day
-  })
-
-  return c.json({ success: true })
+  const token = await createToken(username, c.env.ADMIN_SESSION_SECRET)
+  return c.json({ token, username })
 })
 
 app.post('/logout', async (c) => {
-  deleteCookie(c, 'admin_session', { path: '/' })
+  // Token is stateless — client just discards it
   return c.json({ success: true })
 })
 
-// Quick check if authenticated
-app.get('/me', authMiddleware, async (c) => {
-  const user = c.get('adminUser')
-  if (!user) return c.json({ error: 'Unauthorized' }, 401)
-  return c.json({ user })
+// Returns current user if token is valid
+app.get('/me', async (c) => {
+  const auth = c.req.header('Authorization')
+  if (!auth?.startsWith('Bearer ')) {
+    return c.json({ error: 'Unauthorized' }, 401)
+  }
+  const username = await verifyToken(auth.slice(7), c.env.ADMIN_SESSION_SECRET)
+  if (!username) return c.json({ error: 'Unauthorized' }, 401)
+  return c.json({ user: { username } })
 })
 
 export default app
