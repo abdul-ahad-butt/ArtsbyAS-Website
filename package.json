@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build --config frontend/vite.config.ts && npx esbuild backend/src/worker.ts --bundle --format=esm --outfile=dist/_worker.js",
-    "build:admin": "tsc -b && vite build --config admin/vite.config.ts",
+    "build:admin": "node -e \"require('fs').mkdirSync('dist-admin',{recursive:true})\" && tsc -b && vite build --config admin/vite.config.ts",
     "lint": "oxlint",
     "preview": "vite preview",
     "deploy": "npm run build && npx wrangler pages deploy dist --project-name=artbyas-ecommerce"

@@ -9,7 +9,7 @@ export default defineConfig({
   // Use index.html as the entry point
   root: 'admin',
   build: {
-    outDir: 'dist-admin',
+    outDir: '../dist-admin',
     rollupOptions: {
       input: './index.html',
     },
