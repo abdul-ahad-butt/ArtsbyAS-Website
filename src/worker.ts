@@ -31,10 +31,12 @@ api.route('/admin', admin)
 // Mount API at /api
 app.route('/api', api)
 
-// For all other routes, serve the SPA index.html so React Router works
+// For all other routes, pass the request to Cloudflare's native asset handler.
+// With not_found_handling = "single-page-application" in wrangler.toml, it will 
+// serve static files if they exist, and fallback to index.html for SPA routes.
 app.get('*', async (c) => {
   // @ts-ignore - ASSETS is provided by Cloudflare Workers when [assets] binding is used
-  return await c.env.ASSETS.fetch(new Request(new URL('/', c.req.url)))
+  return await c.env.ASSETS.fetch(c.req.raw)
 })
 
 export default app
