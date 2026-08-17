@@ -3,12 +3,13 @@ import { adminLogin, adminLogout, checkAuth } from '../lib/api-admin'
 import Dashboard from './Dashboard'
 import CanvasManagement from './CanvasManagement'
 import OrderManagement from './OrderManagement'
-import { LayoutDashboard, Image, Package, LogOut, Loader2 } from 'lucide-react'
+import { LayoutDashboard, Image, Package, LogOut, Loader2, Menu, X } from 'lucide-react'
 
 export default function AdminLayout() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<'dashboard' | 'canvases' | 'orders'>('dashboard')
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -81,38 +82,48 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-brand-background">
-      {/* Sidebar */}
-      <aside className="w-full md:w-64 md:min-h-screen bg-brand-surface border-b md:border-b-0 md:border-r border-brand-border flex flex-col">
-        <div className="p-6 border-b border-brand-border flex justify-between items-center">
+      {/* Sidebar / Topbar */}
+      <aside className="w-full md:w-64 md:min-h-screen bg-brand-surface border-b md:border-b-0 md:border-r border-brand-border flex flex-col z-50 sticky top-0 md:relative">
+        <div className="p-4 md:p-6 border-b border-brand-border flex justify-between items-center bg-brand-surface">
           <h1 className="text-2xl font-serif font-bold text-brand-espresso">ArtbyAS Admin</h1>
-          {/* Mobile could have a hamburger menu here, but keeping it simple for now by showing all on mobile as a top bar if needed, or just stacking. */}
+          <button 
+            className="md:hidden p-2 text-brand-espresso hover:bg-brand-border/50 rounded-sm transition-colors"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
         
-        <nav className="flex-1 p-4 space-y-2 flex flex-col">
-          {tabs.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-sm font-medium transition-colors ${
-                activeTab === tab.id 
-                  ? 'bg-brand-espresso text-white' 
-                  : 'text-brand-charcoal hover:bg-brand-border/50'
-              }`}
-            >
-              <tab.icon className="w-5 h-5" />
-              {tab.label}
-            </button>
-          ))}
-        </nav>
+        <div className={`${isMobileMenuOpen ? 'flex' : 'hidden'} md:flex flex-col flex-1 absolute md:relative top-full left-0 right-0 bg-brand-surface md:bg-transparent border-b md:border-b-0 border-brand-border md:border-none shadow-lg md:shadow-none`}>
+          <nav className="flex-1 p-4 space-y-2 flex flex-col">
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => {
+                  setActiveTab(tab.id)
+                  setIsMobileMenuOpen(false)
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-sm font-medium transition-colors ${
+                  activeTab === tab.id 
+                    ? 'bg-brand-accent text-white shadow-sm' 
+                    : 'text-brand-charcoal hover:bg-brand-border/50 hover:text-brand-espresso'
+                }`}
+              >
+                <tab.icon className="w-5 h-5" />
+                {tab.label}
+              </button>
+            ))}
+          </nav>
 
-        <div className="p-4 border-t border-brand-border">
-          <button 
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-sm font-medium transition-colors"
-          >
-            <LogOut className="w-5 h-5" />
-            Sign Out
-          </button>
+          <div className="p-4 border-t border-brand-border">
+            <button 
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-sm font-medium transition-colors"
+            >
+              <LogOut className="w-5 h-5" />
+              Sign Out
+            </button>
+          </div>
         </div>
       </aside>
 

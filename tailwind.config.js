@@ -15,7 +15,8 @@ export default {
           surface: '#F4F2EE', // Slightly darker for cards
           espresso: '#2B2118', // Deep brown/espresso for text
           charcoal: '#333333', // Secondary text
-          accent: '#8C7A6B', // Muted vintage accent
+          accent: '#C2410C', // Warm rust/ochre accent
+          surfaceAccent: '#F9EBE6', // Light warm background for icons
           border: '#E8E5E1'
         }
       },

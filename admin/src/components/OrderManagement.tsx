@@ -38,9 +38,9 @@ export default function OrderManagement() {
   }
 
   return (
-    <div className="p-8 max-w-7xl mx-auto relative">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl font-serif font-bold text-brand-espresso">Order Queue</h2>
+    <div className="p-4 md:p-8 max-w-7xl mx-auto relative">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6 md:mb-8">
+        <h2 className="text-2xl md:text-3xl font-serif font-bold text-brand-espresso">Order Queue</h2>
         
         <div className="flex gap-4">
           <select 

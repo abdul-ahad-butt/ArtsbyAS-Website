@@ -37,9 +37,9 @@ export default function CanvasManagement() {
   if (loading) return <div className="p-8"><Loader2 className="animate-spin text-brand-espresso" /></div>
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl font-serif font-bold text-brand-espresso">Canvas Management</h2>
+    <div className="p-4 md:p-8 max-w-6xl mx-auto">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6 md:mb-8">
+        <h2 className="text-2xl md:text-3xl font-serif font-bold text-brand-espresso">Canvas Management</h2>
         <button 
           onClick={handleAddNew}
           className="bg-brand-espresso text-white px-4 py-2 rounded-sm flex items-center gap-2 hover:bg-brand-charcoal"

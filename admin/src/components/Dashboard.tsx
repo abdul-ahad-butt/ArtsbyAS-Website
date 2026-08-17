@@ -77,13 +77,13 @@ export default function Dashboard() {
   ]
 
   return (
-    <div className="p-8">
-      <h2 className="text-3xl font-serif font-bold text-brand-espresso mb-8">Dashboard Overview</h2>
+    <div className="p-4 md:p-8">
+      <h2 className="text-2xl md:text-3xl font-serif font-bold text-brand-espresso mb-6 md:mb-8">Dashboard Overview</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {cards.map((card, i) => (
           <div key={i} className="bg-white p-6 rounded-sm border border-brand-border shadow-sm flex items-center">
-            <div className="p-4 bg-brand-surface rounded-full mr-4 text-brand-espresso">
+            <div className="p-4 bg-brand-surfaceAccent rounded-full mr-4 text-brand-accent">
               <card.icon className="w-6 h-6" />
             </div>
             <div>

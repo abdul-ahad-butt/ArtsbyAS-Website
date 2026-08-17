@@ -6,12 +6,13 @@ import ArtworkGrid from './components/ArtworkGrid'
 import ProductModal from './components/ProductModal'
 import CheckoutForm from './components/CheckoutForm'
 import SuccessScreen from './components/SuccessScreen'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Menu, X, MessageCircle } from 'lucide-react'
 
 function App() {
   const [canvases, setCanvases] = useState<Canvas[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const [selectedCanvas, setSelectedCanvas] = useState<Canvas | null>(null)
   const [purchasingCanvas, setPurchasingCanvas] = useState<Canvas | null>(null)
@@ -35,6 +36,7 @@ function App() {
   }
 
   const handleExplore = () => {
+    setIsMobileMenuOpen(false)
     document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })
   }
 
@@ -55,13 +57,39 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="border-b border-brand-border py-6 px-8 flex justify-between items-center bg-brand-surface/80 backdrop-blur-sm sticky top-0 z-50">
-        <h1 className="text-2xl font-bold tracking-tight font-serif">ArtbyAS</h1>
-        <nav className="text-sm font-medium text-brand-charcoal space-x-6">
-          <button onClick={handleExplore} className="hover:text-brand-espresso transition-colors">Gallery</button>
-          <a href="#" className="hover:text-brand-espresso transition-colors">About</a>
+      <header className="border-b border-brand-border py-4 md:py-6 px-4 md:px-8 flex justify-between items-center bg-brand-surface/80 backdrop-blur-sm sticky top-0 z-50">
+        <h1 className="text-2xl font-bold tracking-tight font-serif text-brand-espresso">ArtbyAS</h1>
+        
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center space-x-6 text-sm font-medium text-brand-charcoal">
+          <button onClick={handleExplore} className="hover:text-brand-accent transition-colors">Gallery</button>
+          <a href="#" className="hover:text-brand-accent transition-colors">About</a>
+          <a href="https://wa.me/923000000000" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-brand-accent hover:text-brand-espresso transition-colors">
+            <MessageCircle className="w-4 h-4" />
+            <span className="sr-only">WhatsApp</span>
+          </a>
         </nav>
+
+        {/* Mobile Nav Toggle */}
+        <button 
+          className="md:hidden p-2 text-brand-espresso"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
       </header>
+
+      {/* Mobile Nav Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-brand-surface border-b border-brand-border absolute top-[73px] left-0 right-0 z-40 p-4 flex flex-col space-y-4 shadow-lg">
+          <button onClick={handleExplore} className="text-left text-brand-charcoal hover:text-brand-accent font-medium py-2">Gallery</button>
+          <a href="#" className="text-brand-charcoal hover:text-brand-accent font-medium py-2">About</a>
+          <a href="https://wa.me/923000000000" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-brand-accent font-medium py-2">
+            <MessageCircle className="w-5 h-5" />
+            Contact us on WhatsApp
+          </a>
+        </div>
+      )}
 
       <main className="flex-1 flex flex-col">
         <Hero onExplore={handleExplore} />
