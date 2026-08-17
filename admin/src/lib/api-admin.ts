@@ -93,5 +93,9 @@ export async function saveCanvas(data: any, file?: File | null, id?: number) {
   return res.json()
 }
 
-// Re-use fetchCanvases from public API for listing in admin
-export { fetchCanvases } from '../../../frontend/src/lib/api'
+export async function fetchCanvases() {
+  const res = await fetch(`${BASE}/api/canvases`)
+  if (!res.ok) throw new Error('Failed to fetch canvases')
+  const data = await res.json()
+  return (data as any).canvases
+}

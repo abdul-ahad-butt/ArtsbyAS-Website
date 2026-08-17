@@ -47,7 +47,7 @@ export default function Dashboard() {
       // Calculate earnings (requires canvas prices)
       orders.forEach(o => {
         if (o.status === 'verified' || o.status === 'dispatched') {
-          const c = canvases.find((canvas) => canvas.id === o.canvas_id)
+          const c = canvases.find((canvas: any) => canvas.id === o.canvas_id)
           if (c) earnings += c.price_pkr
         }
       })
