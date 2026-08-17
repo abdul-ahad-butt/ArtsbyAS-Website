@@ -13,7 +13,7 @@ app.post('/login', async (c) => {
   }
 
   // Validate against Worker secrets set in the Cloudflare dashboard
-  if (!c.env.ADMIN_USERNAME || !c.env.ADMIN_PASSWORD) {
+  if (!c.env.ADMIN_USERNAME || !c.env.ADMIN_PASSWORD || !c.env.ADMIN_SESSION_SECRET) {
     return c.json({ error: 'Server not configured' }, 500)
   }
 

@@ -3,6 +3,32 @@ import type { Bindings, Variables } from '../types'
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>()
 
+// GET /api/admin/canvases - paginated list (reuse similar logic to public, but maybe with more info)
+app.get('/', async (c) => {
+  try {
+    const page = parseInt(c.req.query('page') || '1')
+    const limit = parseInt(c.req.query('limit') || '10')
+    const offset = (page - 1) * limit
+
+    let query = 'SELECT * FROM canvases ORDER BY created_at DESC LIMIT ? OFFSET ?'
+    let countQuery = 'SELECT COUNT(*) as total FROM canvases'
+
+    let stmt1 = c.env.DB.prepare(query).bind(limit, offset)
+    let stmt2 = c.env.DB.prepare(countQuery)
+
+    const [{ results }, { results: countResults }] = await c.env.DB.batch([stmt1, stmt2])
+
+    return c.json({
+      canvases: results,
+      total: (countResults[0] as any).total,
+      page,
+      limit
+    })
+  } catch (e: any) {
+    return c.json({ error: e.message || 'Unknown error in admin canvases GET' }, 500)
+  }
+})
+
 // POST /api/admin/canvases - create canvas and handle R2 image upload
 app.post('/', async (c) => {
   const formData = await c.req.parseBody()
