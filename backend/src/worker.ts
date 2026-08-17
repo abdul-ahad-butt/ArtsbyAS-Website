@@ -1,4 +1,5 @@
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
 import canvases from '../api/canvases'
 import orders from '../api/orders'
 import adminOrders from '../api/admin/orders'
@@ -9,6 +10,16 @@ import type { Bindings, Variables } from '../api/types'
 
 // Main app
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>()
+
+// Allow cross-origin requests from the admin panel Pages deployment
+app.use('/api/*', cors({
+  origin: [
+    'https://artsbyas-website-admin-panel.pages.dev',
+    'http://localhost:5174',  // local admin dev server
+  ],
+  credentials: true,
+}))
+
 
 // API Routes
 const api = new Hono<{ Bindings: Bindings; Variables: Variables }>()
