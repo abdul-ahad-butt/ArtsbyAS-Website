@@ -7,6 +7,7 @@ import ProductModal from './components/ProductModal'
 import CheckoutForm from './components/CheckoutForm'
 import SuccessScreen from './components/SuccessScreen'
 import { Loader2, Menu, X, MessageCircle } from 'lucide-react'
+import logo from './assets/logo/artbyas-wordmark-transparent.png'
 
 function App() {
   const [canvases, setCanvases] = useState<Canvas[]>([])
@@ -57,8 +58,10 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="border-b border-brand-border py-4 md:py-6 px-4 md:px-8 flex justify-between items-center bg-brand-surface/80 backdrop-blur-sm sticky top-0 z-50">
-        <h1 className="text-2xl font-bold tracking-tight font-serif text-brand-espresso">ArtbyAS</h1>
+      <header className="border-b border-brand-border py-5 md:py-7 px-4 md:px-8 flex justify-between items-center bg-brand-surface/80 backdrop-blur-sm sticky top-0 z-50">
+        <a href="/" className="block">
+          <img src={logo} alt="ArtbyAS" className="h-8 md:h-10 w-auto object-contain" />
+        </a>
         
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium text-brand-charcoal">
