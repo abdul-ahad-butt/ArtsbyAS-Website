@@ -94,7 +94,7 @@ export default function AdminLayout() {
           </button>
         </div>
         
-        <div className={`${isMobileMenuOpen ? 'flex' : 'hidden'} md:flex flex-col flex-1 absolute md:relative top-full left-0 right-0 bg-brand-surface md:bg-transparent border-b md:border-b-0 border-brand-border md:border-none shadow-lg md:shadow-none`}>
+        <div className={`${isMobileMenuOpen ? 'flex' : 'hidden'} md:flex flex-col flex-1 absolute md:relative top-full md:top-auto left-0 right-0 bg-brand-surface md:bg-transparent border-b md:border-b-0 border-brand-border md:border-none shadow-lg md:shadow-none`}>
           <nav className="flex-1 p-4 space-y-2 flex flex-col">
             {tabs.map(tab => (
               <button
