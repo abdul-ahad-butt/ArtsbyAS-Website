@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build --config frontend/vite.config.ts && npx esbuild backend/src/worker.ts --bundle --format=esm --outfile=dist/_worker.js",
+    "build": "tsc -b && vite build --config frontend/vite.config.ts && npx esbuild backend/src/worker.ts --bundle --format=esm --outfile=dist/_worker.js && node -e \"require('fs').writeFileSync('dist/.assetsignore','_worker.js\\n')\"",
     "build:admin": "node -e \"require('fs').mkdirSync('dist-admin',{recursive:true})\" && tsc -b && vite build --config admin/vite.config.ts",
     "lint": "oxlint",
     "preview": "vite preview",
