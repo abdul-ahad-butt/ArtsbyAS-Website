@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { adminLogin, adminLogout, checkAuth } from '../../lib/api-admin'
+import { adminLogin, adminLogout, checkAuth } from '../lib/api-admin'
 import Dashboard from './Dashboard'
 import CanvasManagement from './CanvasManagement'
 import OrderManagement from './OrderManagement'

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import type { Order } from '../../lib/types'
-import { fetchAdminOrders, verifyOrder, dispatchOrder } from '../../lib/api-admin'
+import type { Order } from '../../../shared/types'
+import { fetchAdminOrders, verifyOrder, dispatchOrder } from '../lib/api-admin'
 import { Loader2, X, Check, Truck } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 

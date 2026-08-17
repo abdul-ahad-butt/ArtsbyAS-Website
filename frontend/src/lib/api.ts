@@ -1,4 +1,4 @@
-import type { Canvas } from './types'
+import type { Canvas } from '../../../shared/types'
 
 export async function fetchCanvases(): Promise<Canvas[]> {
   const res = await fetch('/api/canvases')

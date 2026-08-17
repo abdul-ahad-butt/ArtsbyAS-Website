@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import type { Order } from '../../lib/types'
-import { fetchAdminOrders, fetchCanvases } from '../../lib/api-admin'
+import type { Order } from '../../../shared/types'
+import { fetchAdminOrders, fetchCanvases } from '../lib/api-admin'
 import { Loader2, DollarSign, Package, CheckCircle, Image } from 'lucide-react'
 
 export default function Dashboard() {

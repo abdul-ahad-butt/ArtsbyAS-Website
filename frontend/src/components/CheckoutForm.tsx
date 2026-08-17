@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import type { Canvas } from '../../lib/types'
-import { createOrder } from '../../lib/api'
+import type { Canvas } from '../../../shared/types'
+import { createOrder } from '../lib/api'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, UploadCloud, Loader2 } from 'lucide-react'
 

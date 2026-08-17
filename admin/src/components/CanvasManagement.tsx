@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import type { Canvas } from '../../lib/types'
-import { fetchCanvases, saveCanvas } from '../../lib/api-admin'
+import type { Canvas } from '../../../shared/types'
+import { fetchCanvases, saveCanvas } from '../lib/api-admin'
 import { Plus, Edit2, Loader2 } from 'lucide-react'
 
 export default function CanvasManagement() {

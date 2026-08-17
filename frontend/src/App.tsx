@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react'
-import type { Canvas } from './lib/types'
+import type { Canvas } from '../../shared/types'
 import { fetchCanvases } from './lib/api'
-import Hero from './components/storefront/Hero'
-import ArtworkGrid from './components/storefront/ArtworkGrid'
-import ProductModal from './components/storefront/ProductModal'
-import CheckoutForm from './components/storefront/CheckoutForm'
-import SuccessScreen from './components/storefront/SuccessScreen'
-import AdminLayout from './components/admin/AdminLayout'
+import Hero from './components/Hero'
+import ArtworkGrid from './components/ArtworkGrid'
+import ProductModal from './components/ProductModal'
+import CheckoutForm from './components/CheckoutForm'
+import SuccessScreen from './components/SuccessScreen'
 import { Loader2 } from 'lucide-react'
 
-function Storefront() {
+function App() {
   const [canvases, setCanvases] = useState<Canvas[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -110,16 +109,6 @@ function Storefront() {
       />
     </div>
   )
-}
-
-function App() {
-  const path = window.location.pathname
-  
-  if (path.startsWith('/admin')) {
-    return <AdminLayout />
-  }
-
-  return <Storefront />
 }
 
 export default App

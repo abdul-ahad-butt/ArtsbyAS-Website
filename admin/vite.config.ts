@@ -6,12 +6,12 @@ import react from '@vitejs/plugin-react'
 // Cloudflare Pages project without touching the main Worker build.
 export default defineConfig({
   plugins: [react()],
-  // Use admin.html as the entry point instead of index.html
-  root: '.',
+  // Use index.html as the entry point
+  root: 'admin',
   build: {
-    outDir: 'dist-admin',
+    outDir: '../dist-admin',
     rollupOptions: {
-      input: './admin.html',
+      input: './index.html',
     },
   },
   server: {

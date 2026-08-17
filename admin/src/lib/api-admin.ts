@@ -68,4 +68,4 @@ export async function saveCanvas(data: any, file?: File | null, id?: number) {
 }
 
 // Re-use fetchCanvases from public API for listing in admin
-export { fetchCanvases } from './api'
+export { fetchCanvases } from '../../../frontend/src/lib/api'

@@ -1,4 +1,4 @@
-import type { Canvas } from '../../lib/types'
+import type { Canvas } from '../../../shared/types'
 import { motion } from 'framer-motion'
 
 export default function ArtworkGrid({ canvases, onSelect }: { canvases: Canvas[], onSelect: (c: Canvas) => void }) {

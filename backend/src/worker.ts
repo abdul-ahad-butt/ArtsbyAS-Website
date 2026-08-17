@@ -1,11 +1,11 @@
 import { Hono } from 'hono'
-import canvases from '../functions/api/canvases'
-import orders from '../functions/api/orders'
-import adminOrders from '../functions/api/admin/orders'
-import adminCanvases from '../functions/api/admin/canvases'
-import adminAuth from '../functions/api/admin/auth'
-import { authMiddleware } from '../functions/api/middleware'
-import type { Bindings, Variables } from '../functions/api/types'
+import canvases from '../api/canvases'
+import orders from '../api/orders'
+import adminOrders from '../api/admin/orders'
+import adminCanvases from '../api/admin/canvases'
+import adminAuth from '../api/admin/auth'
+import { authMiddleware } from '../api/middleware'
+import type { Bindings, Variables } from '../api/types'
 
 // Main app
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>()

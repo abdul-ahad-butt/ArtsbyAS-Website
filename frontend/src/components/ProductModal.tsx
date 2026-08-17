@@ -1,4 +1,4 @@
-import type { Canvas } from '../../lib/types'
+import type { Canvas } from '../../../shared/types'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 
