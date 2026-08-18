@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { Canvas } from '../../../shared/types'
-import { fetchCanvases, saveCanvas } from '../lib/api-admin'
-import { Plus, Edit2, Loader2 } from 'lucide-react'
+import { fetchCanvases, saveCanvas, deleteCanvas } from '../lib/api-admin'
+import { Plus, Edit2, Loader2, Trash2 } from 'lucide-react'
 
 export default function CanvasManagement() {
   const [canvases, setCanvases] = useState<Canvas[]>([])
@@ -32,6 +32,18 @@ export default function CanvasManagement() {
   const handleAddNew = () => {
     setEditing(null)
     setShowForm(true)
+  }
+
+  const handleDelete = async (c: Canvas) => {
+    if (window.confirm(`Are you sure you want to delete "${c.title}"? This cannot be undone.`)) {
+      try {
+        await deleteCanvas(c.id)
+        await load() // refresh list
+      } catch (err) {
+        console.error(err)
+        alert('Failed to delete canvas')
+      }
+    }
   }
 
   if (loading) return <div className="p-8"><Loader2 className="animate-spin text-brand-espresso" /></div>
@@ -86,9 +98,12 @@ export default function CanvasManagement() {
                       {c.status}
                     </span>
                   </td>
-                  <td className="p-4 text-right">
-                    <button onClick={() => handleEdit(c)} className="text-brand-accent hover:text-brand-espresso">
-                      <Edit2 className="w-4 h-4" />
+                  <td className="p-4 text-right space-x-3">
+                    <button onClick={() => handleEdit(c)} className="text-brand-accent hover:text-brand-espresso" title="Edit">
+                      <Edit2 className="w-4 h-4 inline" />
+                    </button>
+                    <button onClick={() => handleDelete(c)} className="text-red-500 hover:text-red-700" title="Delete">
+                      <Trash2 className="w-4 h-4 inline" />
                     </button>
                   </td>
                 </tr>

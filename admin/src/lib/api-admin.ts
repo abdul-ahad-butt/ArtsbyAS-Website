@@ -99,3 +99,12 @@ export async function fetchCanvases() {
   const data = await res.json()
   return (data as any).canvases
 }
+
+export async function deleteCanvas(id: number) {
+  const res = await fetch(`${BASE}/api/admin/canvases/${id}`, {
+    method: 'DELETE',
+    headers: authHeader(),
+  })
+  if (!res.ok) throw new Error('Failed to delete canvas')
+  return res.json()
+}
