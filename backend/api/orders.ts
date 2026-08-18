@@ -51,19 +51,23 @@ app.put('/:id/upload', async (c) => {
   const id = c.req.param('id')
   
   const formData = await c.req.parseBody()
-  const file = formData['screenshot']
+  const file = formData['screenshot'] as string | File
   
-  if (!file || typeof file === 'string') {
+  if (!file) {
     return c.json({ error: 'No screenshot file provided' }, 400)
   }
 
-  const fileExt = file.name.split('.').pop()
-  const objectKey = `screenshots/order_${id}_${Date.now()}.${fileExt}`
-  
-  // Upload to R2 removed - stubbing url
+  let screenshotUrl = ''
+
+  if (typeof file === 'string' && file.startsWith('data:image')) {
+    screenshotUrl = file
+  } else if (typeof file !== 'string') {
+    const fileExt = file.name.split('.').pop()
+    const objectKey = `screenshots/order_${id}_${Date.now()}.${fileExt}`
+    screenshotUrl = `/${objectKey}` 
+  }
   
   // Update the order in D1
-  const screenshotUrl = `/${objectKey}` // Assuming R2 public bucket or we serve it via another route
   await c.env.DB.prepare(
     `UPDATE orders SET payment_screenshot_url = ? WHERE id = ?`
   ).bind(screenshotUrl, id).run()

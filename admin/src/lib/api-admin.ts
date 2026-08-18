@@ -1,3 +1,5 @@
+import { compressImageToBase64 } from '../../../shared/image-utils'
+
 // Backend Worker URL.
 // VITE_API_BASE_URL is baked in at build time by Cloudflare Pages env vars.
 // Falls back to the hardcoded workers.dev URL so it works even without the env var.
@@ -83,7 +85,10 @@ export async function saveCanvas(data: any, file?: File | null, id?: number) {
   formData.append('dimensions', data.dimensions || '')
   formData.append('price_pkr', data.price_pkr)
   formData.append('status', data.status)
-  if (file) formData.append('image', file)
+  if (file) {
+    const base64 = await compressImageToBase64(file)
+    formData.append('image', base64)
+  }
 
   const url = id ? `${BASE}/api/admin/canvases/${id}` : `${BASE}/api/admin/canvases`
   const method = id ? 'PATCH' : 'POST'

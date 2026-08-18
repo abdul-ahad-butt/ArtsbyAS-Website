@@ -1,4 +1,5 @@
 import type { Canvas } from '../../../shared/types'
+import { compressImageToBase64 } from '../../../shared/image-utils'
 
 export async function fetchCanvases(): Promise<Canvas[]> {
   const res = await fetch('/api/canvases')
@@ -26,7 +27,8 @@ export async function createOrder(orderData: any, file: File): Promise<{ success
 
     // 2. Upload the screenshot
     const formData = new FormData()
-    formData.append('screenshot', file)
+    const base64 = await compressImageToBase64(file)
+    formData.append('screenshot', base64)
 
     const uploadRes = await fetch(uploadUrl, {
       method: 'PUT',

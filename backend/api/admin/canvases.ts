@@ -38,7 +38,7 @@ app.post('/', async (c) => {
   const dimensions = formData['dimensions'] as string
   const price_pkr = parseInt(formData['price_pkr'] as string)
   const status = formData['status'] as string || 'available'
-  const file = formData['image'] as File
+  const file = formData['image'] as string | File
 
   if (!title || !price_pkr) {
     return c.json({ error: 'Title and price are required' }, 400)
@@ -46,11 +46,12 @@ app.post('/', async (c) => {
 
   let imageUrl = null
 
-  if (file && typeof file !== 'string') {
+  if (typeof file === 'string' && file.startsWith('data:image')) {
+    imageUrl = file
+  } else if (file && typeof file !== 'string') {
+    // legacy/stub for testing
     const fileExt = file.name.split('.').pop()
     const objectKey = `canvases/canvas_${Date.now()}.${fileExt}`
-    
-    // Stubbed upload: just save the path
     imageUrl = `/${objectKey}`
   }
 
@@ -72,7 +73,7 @@ app.patch('/:id', async (c) => {
   const dimensions = formData['dimensions'] as string
   const price_pkr = formData['price_pkr'] ? parseInt(formData['price_pkr'] as string) : undefined
   const status = formData['status'] as string
-  const file = formData['image'] as File
+  const file = formData['image'] as string | File
 
   // Basic update building (in real app, use a query builder)
   let updateParts = []
@@ -84,7 +85,10 @@ app.patch('/:id', async (c) => {
   if (price_pkr) { updateParts.push('price_pkr = ?'); params.push(price_pkr) }
   if (status) { updateParts.push('status = ?'); params.push(status) }
 
-  if (file && typeof file !== 'string') {
+  if (typeof file === 'string' && file.startsWith('data:image')) {
+    updateParts.push('image_url = ?')
+    params.push(file)
+  } else if (file && typeof file !== 'string') {
     const fileExt = file.name.split('.').pop()
     const objectKey = `canvases/canvas_${Date.now()}.${fileExt}`
     // Stubbed upload: just save the path
