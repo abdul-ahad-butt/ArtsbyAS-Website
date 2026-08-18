@@ -7,6 +7,7 @@ import ProductModal from './components/ProductModal'
 import CheckoutForm from './components/CheckoutForm'
 import SuccessScreen from './components/SuccessScreen'
 import TrackOrderModal from './components/TrackOrderModal'
+import AboutSection from './components/AboutSection'
 import { Loader2, Menu, X, MessageCircle } from 'lucide-react'
 import logo from './assets/logo/artbyas-wordmark-transparent.png'
 
@@ -43,6 +44,11 @@ function App() {
     document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })
   }
 
+  const handleAbout = () => {
+    setIsMobileMenuOpen(false)
+    document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   const handlePurchase = (canvas: Canvas) => {
     setSelectedCanvas(null)
     setPurchasingCanvas(canvas)
@@ -68,7 +74,7 @@ function App() {
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium text-brand-charcoal">
           <button onClick={handleExplore} className="hover:text-brand-accent transition-colors">Gallery</button>
-          <a href="#" className="hover:text-brand-accent transition-colors">About</a>
+          <button onClick={handleAbout} className="hover:text-brand-accent transition-colors">About</button>
           <button onClick={() => setIsTrackOrderOpen(true)} className="hover:text-brand-accent transition-colors">Track Order</button>
           <a href="https://wa.me/923000000000" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-brand-accent hover:text-brand-espresso transition-colors">
             <MessageCircle className="w-4 h-4" />
@@ -89,7 +95,7 @@ function App() {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-brand-surface border-b border-brand-border absolute top-[73px] left-0 right-0 z-40 p-4 flex flex-col space-y-4 shadow-lg">
           <button onClick={handleExplore} className="text-left text-brand-charcoal hover:text-brand-accent font-medium py-2">Gallery</button>
-          <a href="#" className="text-brand-charcoal hover:text-brand-accent font-medium py-2">About</a>
+          <button onClick={handleAbout} className="text-left text-brand-charcoal hover:text-brand-accent font-medium py-2">About</button>
           <button onClick={() => { setIsMobileMenuOpen(false); setIsTrackOrderOpen(true) }} className="text-left text-brand-charcoal hover:text-brand-accent font-medium py-2">Track Order</button>
           <a href="https://wa.me/923000000000" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-brand-accent font-medium py-2">
             <MessageCircle className="w-5 h-5" />
@@ -120,6 +126,8 @@ function App() {
             )}
           </div>
         </div>
+
+        <AboutSection />
       </main>
       
       <footer className="py-12 text-center text-sm text-brand-charcoal/70 border-t border-brand-border bg-brand-surface">
