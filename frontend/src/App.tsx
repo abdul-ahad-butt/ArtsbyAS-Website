@@ -6,6 +6,7 @@ import ArtworkGrid from './components/ArtworkGrid'
 import ProductModal from './components/ProductModal'
 import CheckoutForm from './components/CheckoutForm'
 import SuccessScreen from './components/SuccessScreen'
+import TrackOrderModal from './components/TrackOrderModal'
 import { Loader2, Menu, X, MessageCircle } from 'lucide-react'
 import logo from './assets/logo/artbyas-wordmark-transparent.png'
 
@@ -14,6 +15,7 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isTrackOrderOpen, setIsTrackOrderOpen] = useState(false)
 
   const [selectedCanvas, setSelectedCanvas] = useState<Canvas | null>(null)
   const [purchasingCanvas, setPurchasingCanvas] = useState<Canvas | null>(null)
@@ -67,6 +69,7 @@ function App() {
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium text-brand-charcoal">
           <button onClick={handleExplore} className="hover:text-brand-accent transition-colors">Gallery</button>
           <a href="#" className="hover:text-brand-accent transition-colors">About</a>
+          <button onClick={() => setIsTrackOrderOpen(true)} className="hover:text-brand-accent transition-colors">Track Order</button>
           <a href="https://wa.me/923000000000" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-brand-accent hover:text-brand-espresso transition-colors">
             <MessageCircle className="w-4 h-4" />
             <span className="sr-only">WhatsApp</span>
@@ -87,6 +90,7 @@ function App() {
         <div className="md:hidden bg-brand-surface border-b border-brand-border absolute top-[73px] left-0 right-0 z-40 p-4 flex flex-col space-y-4 shadow-lg">
           <button onClick={handleExplore} className="text-left text-brand-charcoal hover:text-brand-accent font-medium py-2">Gallery</button>
           <a href="#" className="text-brand-charcoal hover:text-brand-accent font-medium py-2">About</a>
+          <button onClick={() => { setIsMobileMenuOpen(false); setIsTrackOrderOpen(true) }} className="text-left text-brand-charcoal hover:text-brand-accent font-medium py-2">Track Order</button>
           <a href="https://wa.me/923000000000" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-brand-accent font-medium py-2">
             <MessageCircle className="w-5 h-5" />
             Contact us on WhatsApp
@@ -137,6 +141,11 @@ function App() {
       <SuccessScreen 
         orderCode={orderCode} 
         onClose={handleSuccessClose} 
+      />
+
+      <TrackOrderModal 
+        isOpen={isTrackOrderOpen} 
+        onClose={() => setIsTrackOrderOpen(false)} 
       />
     </div>
   )

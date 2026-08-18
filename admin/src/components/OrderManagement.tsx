@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { Order } from '../../../shared/types'
-import { fetchAdminOrders, verifyOrder, dispatchOrder } from '../lib/api-admin'
-import { Loader2, X, Check, Truck } from 'lucide-react'
+import { fetchAdminOrders, verifyOrder, dispatchOrder, deleteOrder, bulkDeleteOrders } from '../lib/api-admin'
+import { Loader2, X, Check, Truck, Trash2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export default function OrderManagement() {
@@ -10,6 +10,8 @@ export default function OrderManagement() {
   const [page, setPage] = useState(1)
   const [statusFilter, setStatusFilter] = useState('')
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
+  const [selectedIds, setSelectedIds] = useState<number[]>([])
+  const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
     load()
@@ -27,6 +29,48 @@ export default function OrderManagement() {
     }
   }
 
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelectedIds(orders.map(o => o.id))
+    } else {
+      setSelectedIds([])
+    }
+  }
+
+  const handleSelectOne = (id: number) => {
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    )
+  }
+
+  const handleDeleteSingle = async (e: React.MouseEvent, id: number) => {
+    e.stopPropagation()
+    if (!window.confirm('Are you sure you want to delete this order?')) return
+    try {
+      await deleteOrder(id)
+      setSelectedIds(prev => prev.filter(i => i !== id))
+      load()
+    } catch (err) {
+      alert('Failed to delete order.')
+    }
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return
+    if (!window.confirm(`Are you sure you want to delete ${selectedIds.length} selected orders?`)) return
+    
+    setIsDeleting(true)
+    try {
+      await bulkDeleteOrders(selectedIds)
+      setSelectedIds([])
+      load()
+    } catch (err) {
+      alert('Failed to bulk delete orders.')
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending_verification': return <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-sm uppercase">Pending</span>
@@ -40,7 +84,18 @@ export default function OrderManagement() {
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto relative">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6 md:mb-8">
-        <h2 className="text-2xl md:text-3xl font-serif font-bold text-brand-espresso">Order Queue</h2>
+        <div className="flex items-center gap-4">
+          <h2 className="text-2xl md:text-3xl font-serif font-bold text-brand-espresso">Order Queue</h2>
+          {selectedIds.length > 0 && (
+            <button 
+              onClick={handleBulkDelete}
+              disabled={isDeleting}
+              className="px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-sm font-medium text-sm flex items-center gap-1 transition-colors"
+            >
+              <Trash2 className="w-4 h-4" /> Delete Selected ({selectedIds.length})
+            </button>
+          )}
+        </div>
         
         <div className="flex gap-4">
           <select 
@@ -63,11 +118,20 @@ export default function OrderManagement() {
           <table className="w-full text-left min-w-[700px]">
             <thead className="bg-brand-surface border-b border-brand-border text-sm text-brand-charcoal/80 uppercase">
               <tr>
+                <th className="p-4 w-12">
+                  <input 
+                    type="checkbox" 
+                    checked={orders.length > 0 && selectedIds.length === orders.length}
+                    onChange={handleSelectAll}
+                    className="w-4 h-4 rounded-sm border-gray-300 text-brand-accent focus:ring-brand-accent cursor-pointer"
+                  />
+                </th>
                 <th className="p-4">Order Code</th>
                 <th className="p-4">Date</th>
                 <th className="p-4">Customer</th>
                 <th className="p-4">City</th>
                 <th className="p-4">Status</th>
+                <th className="p-4"></th>
               </tr>
             </thead>
             <tbody>
@@ -77,6 +141,14 @@ export default function OrderManagement() {
                   onClick={() => setSelectedOrder(o)}
                   className="border-b border-brand-border/50 hover:bg-brand-surface/50 transition-colors cursor-pointer"
                 >
+                  <td className="p-4" onClick={(e) => e.stopPropagation()}>
+                    <input 
+                      type="checkbox" 
+                      checked={selectedIds.includes(o.id)}
+                      onChange={() => handleSelectOne(o.id)}
+                      className="w-4 h-4 rounded-sm border-gray-300 text-brand-accent focus:ring-brand-accent cursor-pointer"
+                    />
+                  </td>
                   <td className="p-4 font-bold font-mono text-brand-espresso">{o.order_code}</td>
                   <td className="p-4 text-sm">{new Date(o.created_at).toLocaleDateString()}</td>
                   <td className="p-4">
@@ -85,10 +157,19 @@ export default function OrderManagement() {
                   </td>
                   <td className="p-4 text-sm">{o.city}</td>
                   <td className="p-4">{getStatusBadge(o.status)}</td>
+                  <td className="p-4 text-right">
+                    <button 
+                      onClick={(e) => handleDeleteSingle(e, o.id)}
+                      className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                      title="Delete order"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </td>
                 </tr>
               ))}
               {orders.length === 0 && (
-                <tr><td colSpan={5} className="p-8 text-center text-gray-500">No orders found.</td></tr>
+                <tr><td colSpan={7} className="p-8 text-center text-gray-500">No orders found.</td></tr>
               )}
             </tbody>
           </table>

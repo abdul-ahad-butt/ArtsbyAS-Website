@@ -169,7 +169,7 @@ export default function CheckoutForm({
             <button 
               form="checkout-form"
               type="submit"
-              disabled={loading}
+              disabled={loading || !file}
               className="px-6 py-3 bg-brand-espresso text-brand-background rounded-sm font-medium hover:bg-brand-charcoal transition-colors disabled:opacity-70 flex-2 flex items-center justify-center w-2/3"
             >
               {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Confirm Order'}

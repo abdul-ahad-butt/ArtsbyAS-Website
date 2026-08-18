@@ -74,5 +74,26 @@ app.put('/:id/upload', async (c) => {
 
   return c.json({ success: true, screenshotUrl })
 })
+// Fetch order status by code
+app.get('/:code', async (c) => {
+  const code = c.req.param('code')
+  
+  try {
+    const { results } = await c.env.DB.prepare(
+      `SELECT o.order_code, o.status, o.created_at, o.courier, c.title as canvas_title 
+       FROM orders o 
+       JOIN canvases c ON o.canvas_id = c.id 
+       WHERE o.order_code = ?`
+    ).bind(code).all()
+
+    if (results.length === 0) {
+      return c.json({ error: 'Order not found' }, 404)
+    }
+
+    return c.json({ success: true, order: results[0] })
+  } catch (error: any) {
+    return c.json({ error: error.message }, 500)
+  }
+})
 
 export default app

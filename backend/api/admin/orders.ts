@@ -94,4 +94,48 @@ app.patch('/:id/dispatch', async (c) => {
   }
 })
 
+// DELETE /api/admin/orders/:id
+app.delete('/:id', async (c) => {
+  try {
+    const id = c.req.param('id')
+    const { success } = await c.env.DB.prepare(
+      `DELETE FROM orders WHERE id = ?`
+    ).bind(id).run()
+
+    if (!success) {
+      return c.json({ error: 'Failed to delete order' }, 400)
+    }
+
+    return c.json({ success: true })
+  } catch (e: any) {
+    return c.json({ error: e.message || 'Unknown error in delete order' }, 500)
+  }
+})
+
+// POST /api/admin/orders/bulk-delete
+app.post('/bulk-delete', async (c) => {
+  try {
+    const body = await c.req.json()
+    const { ids } = body
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return c.json({ error: 'Invalid or empty ids array' }, 400)
+    }
+
+    // D1 bulk operations using parameters
+    const placeholders = ids.map(() => '?').join(',')
+    const { success } = await c.env.DB.prepare(
+      `DELETE FROM orders WHERE id IN (${placeholders})`
+    ).bind(...ids).run()
+
+    if (!success) {
+      return c.json({ error: 'Failed to bulk delete orders' }, 400)
+    }
+
+    return c.json({ success: true })
+  } catch (e: any) {
+    return c.json({ error: e.message || 'Unknown error in bulk delete orders' }, 500)
+  }
+})
+
 export default app

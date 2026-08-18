@@ -113,3 +113,22 @@ export async function deleteCanvas(id: number) {
   if (!res.ok) throw new Error('Failed to delete canvas')
   return res.json()
 }
+
+export async function deleteOrder(id: number) {
+  const res = await fetch(`${BASE}/api/admin/orders/${id}`, {
+    method: 'DELETE',
+    headers: authHeader(),
+  })
+  if (!res.ok) throw new Error('Failed to delete order')
+  return res.json()
+}
+
+export async function bulkDeleteOrders(ids: number[]) {
+  const res = await fetch(`${BASE}/api/admin/orders/bulk-delete`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeader() },
+    body: JSON.stringify({ ids }),
+  })
+  if (!res.ok) throw new Error('Failed to bulk delete orders')
+  return res.json()
+}

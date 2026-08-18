@@ -46,3 +46,13 @@ export async function createOrder(orderData: any, file: File): Promise<{ success
     return { success: false, error: error.message }
   }
 }
+
+export async function fetchOrderStatus(code: string): Promise<any> {
+  const res = await fetch(`/api/orders/${code}`)
+  if (!res.ok) {
+    const err = await res.json()
+    throw new Error(err.error || 'Failed to fetch order status')
+  }
+  const data = await res.json()
+  return data.order
+}
