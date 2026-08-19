@@ -127,9 +127,9 @@ export default function CheckoutForm({
                 <div className="bg-brand-surface p-4 rounded-sm border border-brand-border mb-6 text-sm text-brand-charcoal/90 space-y-2">
                   <p>Please transfer <strong>Rs. {canvas.price_pkr.toLocaleString()}</strong> to one of the following accounts:</p>
                   <ul className="list-disc list-inside mt-2 space-y-1 ml-2 font-medium">
-                    <li>JazzCash: 0300 1234567 (ArtbyAS)</li>
-                    <li>EasyPaisa: 0300 1234567 (ArtbyAS)</li>
-                    <li>Meezan Bank: 0123456789 (Title: ArtbyAS)</li>
+                    <li>JazzCash: 03314278296 (Title: Abdul Ahad)</li>
+                    <li>EasyPaisa: 03314278296 (Title: Abdul Ahad)</li>
+                    <li>Meezan Bank: PK66MEZN0002840115693895 (Title: Abdul Ahad)</li>
                   </ul>
                 </div>
 
